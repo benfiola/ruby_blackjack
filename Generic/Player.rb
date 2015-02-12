@@ -24,8 +24,8 @@ module Generic
 			hand.place_bet(bet)
 		end
 
-		def receive_money(*args)
-			@money = @money + (2*@bet)
+		def receive_money(to_add)
+			@money = @money + to_add
 		end
 
 		def receive_card(card)
@@ -41,7 +41,11 @@ module Generic
 		end
 
 		def to_s
-			"Player #{@number} - #{@curr_hand}"
+			"Player #{@number} - $#{@money} - #{@curr_hand}"
+		end
+
+		def to_s_for_display(display)
+
 		end
 	end
 end

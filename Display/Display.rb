@@ -22,6 +22,12 @@ class Display
 		@input_window.refresh
 	end
 
+	def press_key_to_continue(message)
+		@input_window.clear
+		@input_window.addstr("#{message}\nPress any key to continue.")
+		return @input_window.getch
+	end
+
 	def fetch_data_from_input_window
 		return @input_window.getstr
 	end 

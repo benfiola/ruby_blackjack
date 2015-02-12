@@ -2,7 +2,10 @@ require "./Generic/Hand.rb"
 require "./Blackjack/BlackjackCard.rb"
 
 class BlackjackHand < Generic::Hand	
-
+	def initialize
+		super
+		@has_doubled = false
+	end
 	# given the current hand, let's define what we can do.
 	def can_split
 		return @cards.length == 2 && @cards.first.rank.value == @cards.last.rank.value && !is_blackjack
@@ -27,7 +30,7 @@ class BlackjackHand < Generic::Hand
 	end
 
 	def is_winner(dealer_value)
-		return !is_bust && get_value > dealer_value
+		return !is_bust && ( (dealer_value <= 21 && get_value > dealer_value) || dealer_value > 21)
 	end
 
 	def is_push(dealer_value)
@@ -35,9 +38,15 @@ class BlackjackHand < Generic::Hand
 	end
 
 	def is_loser(dealer_value)
-		return is_bust || get_value < dealer_value
+		return is_bust || (get_value < dealer_value && dealer_value < 21)
 	end
 
+	# this helper method will let us keep track of whether we've doubled
+	def double
+		@has_doubled = true
+	end
+
+	# finally, this method helps us determine the blackjack value of the current hand
 	def get_value
 		aces_in_hand = 0
 		value = 0

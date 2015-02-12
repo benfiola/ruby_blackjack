@@ -49,13 +49,13 @@ module Generic
 		def to_s
 			to_return = ""
 			if @value == SUIT_HEART
-				to_return = "H"
+				to_return = "\u2665".force_encoding("utf-8")
 			elsif @value == SUIT_CLUB
-				to_return = "C"
+				to_return = "\u2663".force_encoding("utf-8")
 			elsif @value == SUIT_SPADE
-				to_return = "S"
+				to_return = "\u2660".force_encoding("utf-8")
 			elsif @value == SUIT_DIAMOND
-				to_return = "D"
+				to_return = "\u2666".force_encoding("utf-8")
 			end
 			return to_return
 		end

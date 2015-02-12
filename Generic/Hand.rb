@@ -2,6 +2,7 @@
 # held by a player
 module Generic
 	class Hand
+		attr_reader :cards, :bet
 		def initialize
 			@cards = []
 			@bet = 0
