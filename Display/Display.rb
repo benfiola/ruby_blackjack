@@ -1,6 +1,9 @@
 require "curses"
 require "pry"
+require "./Display/Message.rb"
+
 include Curses
+
 class Display
 	attr_reader :game_window, :input_window
 

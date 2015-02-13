@@ -1,5 +1,6 @@
 require "./Generic/Hand.rb"
 require "./Blackjack/BlackjackCard.rb"
+require "./Display/Message"
 
 class BlackjackHand < Generic::Hand	
 	def initialize

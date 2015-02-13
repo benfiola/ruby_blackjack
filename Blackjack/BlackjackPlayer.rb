@@ -1,5 +1,8 @@
 require "./Generic/Player.rb"
+require "./Blackjack/BlackjackCard.rb"
 require "./Blackjack/BlackjackHand.rb"
+require "./Blackjack/BlackjackGame.rb"
+require "./Display/Message"
 
 class BlackjackPlayer < Generic::Player
 	def initialize(number, money, game)

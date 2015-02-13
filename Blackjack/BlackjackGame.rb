@@ -1,7 +1,10 @@
+require "./Blackjack/BlackjackCard.rb"
 require "./Blackjack/BlackjackDealer.rb"
+require "./Blackjack/BlackjackHand.rb"
 require "./Blackjack/BlackjackPlayer.rb"
 require "./Blackjack/BlackjackDeck.rb"
-require "curses"
+require "./Display/Display.rb"
+require "./Display/Message.rb"
 
 class String
 	def is_number?

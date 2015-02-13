@@ -1,4 +1,5 @@
 require "./Generic/Deck.rb"
+require "./Blackjack/BlackjackCard.rb"
 
 class BlackjackDeck < Generic::Deck
 	def initialize(num_decks)
