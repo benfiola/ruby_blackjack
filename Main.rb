@@ -1,5 +1,5 @@
-require "./Blackjack/BlackjackGame.rb"
-require "./Display/Display.rb"
+require_relative "./Blackjack/BlackjackGame.rb"
+require_relative "./Display/Display.rb"
 
 # this is the main entry point for the application
 # all we do here is initialize our display and pass it to our game

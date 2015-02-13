@@ -1,3 +1,6 @@
+require_relative "./Hand.rb"
+require_relative "./Card.rb"
+
 module Generic
 	class Player
 		attr_reader :hands, :curr_hand, :number, :game, :money

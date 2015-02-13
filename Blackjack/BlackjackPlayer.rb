@@ -1,8 +1,8 @@
-require "./Generic/Player.rb"
-require "./Blackjack/BlackjackCard.rb"
-require "./Blackjack/BlackjackHand.rb"
-require "./Blackjack/BlackjackGame.rb"
-require "./Display/Message"
+require_relative "./BlackjackCard.rb"
+require_relative "./BlackjackHand.rb"
+require_relative "./BlackjackGame.rb"
+require_relative "../Generic/Player.rb"
+require_relative "../Display/Message"
 
 class BlackjackPlayer < Generic::Player
 	def initialize(number, money, game)

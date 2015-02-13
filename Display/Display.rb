@@ -1,6 +1,6 @@
 require "curses"
 require "pry"
-require "./Display/Message.rb"
+require_relative "./Message.rb"
 
 include Curses
 

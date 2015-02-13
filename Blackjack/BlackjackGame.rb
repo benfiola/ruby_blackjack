@@ -1,15 +1,17 @@
-require "./Blackjack/BlackjackCard.rb"
-require "./Blackjack/BlackjackDealer.rb"
-require "./Blackjack/BlackjackHand.rb"
-require "./Blackjack/BlackjackPlayer.rb"
-require "./Blackjack/BlackjackDeck.rb"
-require "./Display/Display.rb"
-require "./Display/Message.rb"
+require_relative "./BlackjackCard.rb"
+require_relative "./BlackjackDealer.rb"
+require_relative "./BlackjackHand.rb"
+require_relative "./BlackjackPlayer.rb"
+require_relative "./BlackjackDeck.rb"
+require_relative "../Display/Display.rb"
+require_relative "../Display/Message.rb"
 
+# This helper class lets us check to see if a String input
+# is numeric
 class String
 	def is_number?
 		begin
-			Float(self)
+			Integer(self)
 			return true
 		rescue
 			return false
@@ -137,34 +139,52 @@ class BlackjackGame
 		end
 	end
 
+	def type_q_to_quit
+		message_arr = []
+		message_arr.push(Message.new("Type "))
+		message_arr.push(Message.new("q", "red"))
+		message_arr.push(Message.new(" to quit.\n"))
+		return message_arr
+	end
 
 	def get_bet
 		@display.send_data_to_game_window(self.to_message)
 		message_arr = []
+		message_arr.push(*type_q_to_quit)
 		message_arr.push(Message.new("Player #{@curr_player.number}'s bet : "))
 		bet = prompt_user_for_input(message_arr)
-		while(!bet.is_number? || bet.to_i <= 0 || bet.to_i > @curr_player.money)
+		while( bet != "q" && (!bet.is_number? || bet.to_i <= 0 || bet.to_i > @curr_player.money) )
 			bet = prompt_user_for_input(message_arr)
+		end
+		if(bet == "q")
+			exit(0)
 		end
 		return bet.to_i
 	end
 
 	def handle_action(player)
 		@display.send_data_to_game_window(self.to_message)
-		action = prompt_user_for_input(player.get_action_message)
+		message_arr = []
+		message_arr.push(*type_q_to_quit)
+		message_arr.push(*player.get_action_message)
+		action = prompt_user_for_input(message_arr)
 		while(player.take_action(action))
 			@display.send_data_to_game_window(self.to_message)
-			action = prompt_user_for_input(player.get_action_message)
+			action = prompt_user_for_input(message_arr)
 		end
 	end
 
 
 	def get_num_players
 		message_arr = []
+		message_arr.push(*type_q_to_quit)
 		message_arr.push(Message.new("How many players?\n"))
 		num_players = prompt_user_for_input(message_arr)
-		while(!num_players.is_number? || num_players.to_i <= 0)
+		while(num_players != "q" && (!num_players.is_number? || num_players.to_i <= 0) )
 			num_players = prompt_user_for_input(message_arr)
+		end
+		if(num_players == "q")
+			exit(0)
 		end
 		return num_players.to_i
 	end

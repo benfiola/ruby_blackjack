@@ -1,6 +1,6 @@
-require "./Generic/Hand.rb"
-require "./Blackjack/BlackjackCard.rb"
-require "./Display/Message"
+require_relative "./BlackjackCard.rb"
+require_relative "../Generic/Hand.rb"
+require_relative "../Display/Message"
 
 class BlackjackHand < Generic::Hand	
 	def initialize
@@ -72,12 +72,9 @@ class BlackjackHand < Generic::Hand
 			message_arr.push(Message.new("p", "red"))
 			message_arr.push(Message.new("]lit, "))
 		end
-		message_arr.push(Message.new("["))
+		message_arr.push(Message.new("or ["))
 		message_arr.push(Message.new("s", "red"))
-		message_arr.push(Message.new("]tay or "))
-		message_arr.push(Message.new("["))
-		message_arr.push(Message.new("q", "red"))
-		message_arr.push(Message.new("]uit : ")) 
+		message_arr.push(Message.new("]tay :"))
 		return message_arr
 	end
 

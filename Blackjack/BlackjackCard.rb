@@ -1,4 +1,4 @@
-require './Generic/Card.rb'
+require_relative '../Generic/Card.rb'
 
 class BlackjackCard < Generic::Card
 	def initialize(suit, rank)

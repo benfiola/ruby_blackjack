@@ -1,5 +1,5 @@
-require "./Blackjack/BlackjackPlayer.rb"
-require "./Display/Message.rb"
+require_relative "./BlackjackPlayer.rb"
+require_relative "../Display/Message.rb"
 
 class BlackjackDealer < BlackjackPlayer
 

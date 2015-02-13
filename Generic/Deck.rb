@@ -1,4 +1,4 @@
-require "./Generic/Card.rb"
+require_relative "./Card.rb"
 
 module Generic
 	class Deck
