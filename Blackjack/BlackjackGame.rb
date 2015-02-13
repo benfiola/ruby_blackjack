@@ -43,7 +43,11 @@ class BlackjackGame
 	end
 
 	def reset_round
-		@deck = BlackjackDeck.new(1)
+		# just so we never need to worry about running out of cards
+		# lets add decks depending on how many players are playing
+		# for every 10 players, lets add another deck (assuming an average of 5 cards
+		# per person per round)
+		@deck = BlackjackDeck.new((@players.length/10)+1)
 		@dealer.clear_hands
 		new_hand = BlackjackHand.new
 		@dealer.add_hand(new_hand)
@@ -189,7 +193,6 @@ class BlackjackGame
 	# that's passed to our display
 	def to_message
 		to_return = []
-		to_return.push(Message.new("Player\t\t Bet\tHand\t\t\tWinnings\n"))
 		to_return.push(*dealer.to_message)
 		to_return.push(Message.new("\n"))
 		for player in @players

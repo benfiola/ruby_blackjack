@@ -7,7 +7,8 @@ class Display
 	def initialize
 		@main_window = Window.new(0, 0, 0, 0)
 		@game_window = @main_window.subwin(@main_window.maxy-3, 0, 0, 0)
-		@game_window.setscrreg(0, @main_window.maxy)
+		@game_window.setscrreg(0, @main_window.maxy-3)
+		@game_window.scrollok(true)
 		@input_window = @main_window.subwin(3, 0, @main_window.maxy-3, 0)
 		start_color
 		use_default_colors
@@ -31,6 +32,12 @@ class Display
 		@input_window.clear
 		flush_data(data, @input_window)
 		@input_window.refresh
+	end
+
+	def close
+		@input_window.close
+		@game_window.close
+		@main_window.close
 	end
 
 	def flush_data(data, window)
