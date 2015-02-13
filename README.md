@@ -13,7 +13,7 @@ The requirements were as follows :
 ##No dependencies?
 So, this program is almost entirely pure, standard Ruby.  I did choose to include one dependency for aesthetic reasons.  
 
-The dependency I went with is the 'curses' gem for Ruby.  Why?  Mainly, I just didn't want to constantly print to new lines in the terminal.  After using system resource monitors like [https://github.com/nicolargo/glances](glances) where the terminal is basically a text buffer that can be overwritten at will, I thought it'd be cool to use a similar idea for this project.  Granted, I had no experience with curses before this project, but I'm really glad I got the chance to check it out - it's pretty cool!
+The dependency I went with is the 'curses' gem for Ruby.  Why?  Mainly, I just didn't want to constantly print to new lines in the terminal.  After using system resource monitors like [glances](https://github.com/nicolargo/glances) where the terminal is basically a text buffer that can be overwritten at will, I thought it'd be cool to use a similar idea for this project.  Granted, I had no experience with curses before this project, but I'm really glad I got the chance to check it out - it's pretty cool!
 
 ##Installation
 Getting up and running with this code is simple.  All you need to do is install the curses gem!
@@ -25,9 +25,9 @@ gem install curses
 
 Unfortunately, if you're on a Windows machine, you're going to need to do a bit more work because the ruby-devkit needs a few things to build the native extension.
 
-First, you're going to need to download the pdcurses distribution [http://sourceforge.net/projects/pdcurses/files/pdcurses/3.4/](pdc34dllw.zip).
+First, you're going to need to download the pdcurses distribution [pdc34dllw.zip](http://sourceforge.net/projects/pdcurses/files/pdcurses/3.4/).
 
-Then, unzip this file somewhere.  In this example, unzip the files into a C:\pdcurses directory.  
+Next, unzip this file somewhere.  In this example, unzip the files into a C:\pdcurses directory.  
 
 Within the C:\pdcurses directory, make three new folders called 'bin', 'include' and 'lib'.  You're going to want to move the *.h files you extracted into the 'include' folder, the *.dll file into the 'bin' folder and the *.lib file into the lib folder.  
 
