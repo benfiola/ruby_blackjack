@@ -139,7 +139,7 @@ class BlackjackGame
 		end
 	end
 
-	def type_q_to_quit
+	def print_quit_message
 		message_arr = []
 		message_arr.push(Message.new("Type "))
 		message_arr.push(Message.new("q", "red"))
@@ -150,7 +150,7 @@ class BlackjackGame
 	def get_bet
 		@display.send_data_to_game_window(self.to_message)
 		message_arr = []
-		message_arr.push(*type_q_to_quit)
+		message_arr.push(*print_quit_message)
 		message_arr.push(Message.new("Player #{@curr_player.number}'s bet : "))
 		bet = prompt_user_for_input(message_arr)
 		while( bet != "q" && (!bet.is_number? || bet.to_i <= 0 || bet.to_i > @curr_player.money) )
@@ -165,7 +165,7 @@ class BlackjackGame
 	def handle_action(player)
 		@display.send_data_to_game_window(self.to_message)
 		message_arr = []
-		message_arr.push(*type_q_to_quit)
+		message_arr.push(*print_quit_message)
 		message_arr.push(*player.get_action_message)
 		action = prompt_user_for_input(message_arr)
 		while(player.take_action(action))
@@ -177,7 +177,7 @@ class BlackjackGame
 
 	def get_num_players
 		message_arr = []
-		message_arr.push(*type_q_to_quit)
+		message_arr.push(*print_quit_message)
 		message_arr.push(Message.new("How many players?\n"))
 		num_players = prompt_user_for_input(message_arr)
 		while(num_players != "q" && (!num_players.is_number? || num_players.to_i <= 0) )

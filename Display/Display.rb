@@ -1,5 +1,4 @@
 require "curses"
-require "pry"
 require_relative "./Message.rb"
 
 include Curses
@@ -17,7 +16,7 @@ class Display
 		use_default_colors
 		Curses.TABSIZE=10
 		# 40 is green - for some reason, using COLOR_GREEN looks a bit like yellow
-		init_pair(COLOR_GREEN, 40, -1)
+		init_pair(COLOR_GREEN, COLOR_GREEN, -1)
 		init_pair(COLOR_RED, COLOR_RED, -1)
 		init_pair(COLOR_WHITE, COLOR_WHITE, -1)   
 		init_pair(COLOR_BLUE, COLOR_BLUE, -1)

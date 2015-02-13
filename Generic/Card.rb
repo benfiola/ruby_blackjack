@@ -1,3 +1,4 @@
+require_relative "../Utils/OS.rb"
 
 # This collection of classes serves to define a generic playing card.
 # We don't want to intertwine the rules of Blackjack with the implementation
@@ -61,13 +62,29 @@ module Generic
 		def to_s
 			to_return = ""
 			if @value == SUIT_HEART
-				to_return = "\u2665".force_encoding("utf-8")
+				if !OS.windows?
+					to_return = "\u2665".force_encoding("utf-8")
+				else
+					to_return = "H"
+				end
 			elsif @value == SUIT_CLUB
-				to_return = "\u2663".force_encoding("utf-8")
+				if !OS.windows?				
+					to_return = "\u2663".force_encoding("utf-8")
+				else
+					to_return = "C"
+				end
 			elsif @value == SUIT_SPADE
-				to_return = "\u2660".force_encoding("utf-8")
+				if !OS.windows?
+					to_return = "\u2660".force_encoding("utf-8")
+				else
+					to_return = "S"
+				end
 			elsif @value == SUIT_DIAMOND
-				to_return = "\u2666".force_encoding("utf-8")
+				if !OS.windows?
+					to_return = "\u2666".force_encoding("utf-8")
+				else 
+					to_return = "D"
+				end
 			end
 			return to_return
 		end
@@ -78,14 +95,10 @@ module Generic
 
 		def to_message
 			message_arr = []
-			if @value == SUIT_HEART
-				message_arr.push(Message.new("\u2665".force_encoding("utf-8"), "red"))
-			elsif @value == SUIT_CLUB
-				message_arr.push(Message.new("\u2663".force_encoding("utf-8"), "blue"))
-			elsif @value == SUIT_SPADE
-				message_arr.push(Message.new("\u2660".force_encoding("utf-8"), "blue"))
-			elsif @value == SUIT_DIAMOND
-				message_arr.push(Message.new("\u2666".force_encoding("utf-8"), "red"))
+			if @value == SUIT_HEART || @value == SUIT_DIAMOND
+				message_arr.push(Message.new("#{to_s}", "red"))
+			else 
+				message_arr.push(Message.new("#{to_s}", "blue"))
 			end
 			return message_arr
 		end

@@ -13,7 +13,7 @@ class BlackjackHand < Generic::Hand
 	end
 
 	def can_double
-		return @cards.length == 2 && !is_blackjack
+		return !@has_doubled && @cards.length == 2 && !is_blackjack
 	end
 
 	def can_hit
