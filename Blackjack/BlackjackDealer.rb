@@ -1,4 +1,5 @@
 require "./Blackjack/BlackjackPlayer.rb"
+require "./Display/Message.rb"
 
 class BlackjackDealer < BlackjackPlayer
 
@@ -22,5 +23,12 @@ class BlackjackDealer < BlackjackPlayer
 
 	def to_s
 		"Dealer - #{@curr_hand}"
+	end
+
+	def to_message
+		to_return = []
+		to_return.push(Message.new("Dealer - "))
+		to_return.push(*curr_hand.to_message)
+		return to_return
 	end
 end

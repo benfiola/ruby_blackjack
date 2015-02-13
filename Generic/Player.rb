@@ -11,9 +11,12 @@ module Generic
 			@curr_hand = nil
 		end
 
-		def set_hand(hand)
+		def add_hand(hand)
+			@hands.push(hand)
+		end
+
+		def set_curr_hand(hand)
 			@curr_hand = hand
-			@hands.push(@curr_hand)
 		end
 
 		def place_bet(bet, hand) 
@@ -44,8 +47,19 @@ module Generic
 			"Player #{@number} - $#{@money} - #{@curr_hand}"
 		end
 
-		def to_s_for_display(display)
-
+		def to_message
+			to_return = []
+			to_return.push(Message.new("Player #{@number} - "))
+			to_return.push(Message.new("$#{@money}", "green"))
+			to_return.push(Message.new(" - "))
+			to_return.push(*@curr_hand.to_message)
+			for hand in @hands
+				if hand != @curr_hand
+					to_return.push(Message.new("\n"))
+					to_return.push(*hand.to_message)
+				end
+			end
+			return to_return
 		end
 	end
 end

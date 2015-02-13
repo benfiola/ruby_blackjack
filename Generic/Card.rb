@@ -20,11 +20,23 @@ module Generic
 		end
 
 		def to_s
-			"#{@suit}#{@rank}"
+			to_return = []
+			to_return.push(@rank.to_message)
+			to_return.push(@suit.to_message)
+			return to_return
 		end
 
 		def to_str
 			to_s
+		end
+
+		def to_message
+			to_return = []
+			to_return.push(Message.new("["))
+			to_return.push(*@rank.to_message)
+			to_return.push(*@suit.to_message)
+			to_return.push(Message.new("]"))
+			return to_return
 		end
 	end
 
@@ -62,6 +74,13 @@ module Generic
 
 		def to_str
 			to_s
+		end
+
+		def to_message
+			to_return = []
+			str_value = to_s
+			to_return.push(Message.new(str_value))
+			return to_return
 		end
 	end
 
@@ -103,6 +122,12 @@ module Generic
 			
 		def to_str
 			to_s
+		end
+
+		def to_message
+			to_return = []
+			to_return.push(Message.new("#{to_s}"))
+			return to_return
 		end
 	end
 end

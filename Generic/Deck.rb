@@ -32,5 +32,13 @@ module Generic
 			to_return.strip!
 			return to_return
 		end
+
+		def to_message
+			to_return = []
+			for card in @cards
+				to_return.push(*card.to_message)
+			end
+			return to_return
+		end
 	end
 end

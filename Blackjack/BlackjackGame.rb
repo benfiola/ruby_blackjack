@@ -16,7 +16,6 @@ class BlackjackGame
 			@players.push(BlackjackPlayer.new(i+1, 1000, self))
 		end
 		@dealer = BlackjackDealer.new self
-		@deck = BlackjackDeck.new(1)
 	end
 
 	def go
@@ -27,11 +26,16 @@ class BlackjackGame
 	end
 
 	def reset_round
+		@deck = BlackjackDeck.new(1)
 		@dealer.clear_hands
-		@dealer.set_hand(BlackjackHand.new)
+		new_hand = BlackjackHand.new
+		@dealer.add_hand(new_hand)
+		@dealer.set_curr_hand(new_hand)
 		for player in @players
 			player.clear_hands
-			player.set_hand(BlackjackHand.new)
+			new_hand = BlackjackHand.new
+			player.add_hand(new_hand)
+			player.set_curr_hand(new_hand)
 		end
 	end
 
@@ -57,6 +61,7 @@ class BlackjackGame
 		for player in @players
 			@curr_player = player
 			for hand in @curr_player.hands
+				@curr_player.set_curr_hand hand
 				while(get_action(player, ""))
 				end
 			end
@@ -79,20 +84,24 @@ class BlackjackGame
 				end
 			end
 		end
-		@display.send_data_to_game_window("#{self}")
-		@display.press_key_to_continue("The round has ended.")
+		@display.send_data_to_game_window(self.to_message)
+		message_arr = []
+		message_arr.push(Message.new("The round has ended."))
+		@display.press_key_to_continue(message_arr)
 	end
 
 
 	def get_bet(more_text)
-		@display.send_data_to_game_window("#{self}")
-		@display.send_data_to_input_window("Player #{@curr_player.number} 's bet : ")
+		@display.send_data_to_game_window(self.to_message)
+		message_arr = []
+		message_arr.push(Message.new("Player #{@curr_player.number}'s bet : "))
+		@display.send_data_to_input_window(message_arr)
 		bet = @display.fetch_data_from_input_window
 		return bet.to_i
 	end
 
 	def get_action(player, more_text)
-		@display.send_data_to_game_window("#{self}")
+		@display.send_data_to_game_window(self.to_message)
 		action_string = "Player #{@curr_player.number} can choose to "
 		if(@curr_player.curr_hand.can_hit)
 			action_string += "[h]it, "
@@ -104,7 +113,9 @@ class BlackjackGame
 			action_string += "s[p]lit, "
 		end
 		action_string += "[s]tay or [q]uit : \n"
-		@display.send_data_to_input_window("#{action_string}")
+		message_arr = []
+		message_arr.push(Message.new(action_string))
+		@display.send_data_to_input_window(message_arr)
 		action = @display.fetch_data_from_input_window
 		if(action == "q")
 			exit(0)
@@ -118,7 +129,9 @@ class BlackjackGame
 
 
 	def get_num_players(more_text)
-		@display.send_data_to_input_window("#{more_text}How many players?\n")
+		message_arr = []
+		message_arr.push(Message.new("#{more_text}How many players?\n"))
+		@display.send_data_to_input_window(message_arr)
 		return @display.fetch_data_from_input_window
 	end
 
@@ -133,4 +146,16 @@ class BlackjackGame
 		end
 		return str
 	end
+
+	def to_message
+		to_return = []
+		to_return.push(*dealer.to_message)
+		to_return.push(Message.new("\n"))
+		for player in @players
+			to_return.push(*player.to_message)
+			to_return.push(Message.new("\n"))
+		end
+		return to_return
+	end
+
 end

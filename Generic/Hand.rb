@@ -41,5 +41,13 @@ module Generic
 		def to_str
 			to_s
 		end
+
+		def to_message
+			to_return = []
+			for card in @cards
+				to_return.push(*card.to_message)
+			end
+			return to_return
+		end
 	end
 end
