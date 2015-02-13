@@ -1,6 +1,6 @@
 module Generic
 	class Player
-		attr_reader :hands, :curr_hand, :number, :game
+		attr_reader :hands, :curr_hand, :number, :game, :money
 
 		def initialize(number, money, game)
 			raise RuntimeError, "Can't initialize generic Player"
@@ -49,13 +49,16 @@ module Generic
 
 		def to_message
 			to_return = []
-			to_return.push(Message.new("Player #{@number} - "))
+			if @game.curr_player == self
+				to_return.push(Message.new(">"))
+			end
+			to_return.push(Message.new("Player #{@number} ("))
 			to_return.push(Message.new("$#{@money}", "green"))
-			to_return.push(Message.new(" - "))
+			to_return.push(Message.new(")\t"))
 			to_return.push(*@curr_hand.to_message)
 			for hand in @hands
 				if hand != @curr_hand
-					to_return.push(Message.new("\n"))
+					to_return.push(Message.new("\n\t\t"))
 					to_return.push(*hand.to_message)
 				end
 			end

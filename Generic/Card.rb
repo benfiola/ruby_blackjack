@@ -77,10 +77,17 @@ module Generic
 		end
 
 		def to_message
-			to_return = []
-			str_value = to_s
-			to_return.push(Message.new(str_value))
-			return to_return
+			message_arr = []
+			if @value == SUIT_HEART
+				message_arr.push(Message.new("\u2665".force_encoding("utf-8"), "red"))
+			elsif @value == SUIT_CLUB
+				message_arr.push(Message.new("\u2663".force_encoding("utf-8"), "blue"))
+			elsif @value == SUIT_SPADE
+				message_arr.push(Message.new("\u2660".force_encoding("utf-8"), "blue"))
+			elsif @value == SUIT_DIAMOND
+				message_arr.push(Message.new("\u2666".force_encoding("utf-8"), "red"))
+			end
+			return message_arr
 		end
 	end
 
@@ -116,7 +123,10 @@ module Generic
 				end
 			else
 				to_return = "#{@value}"
-			end 
+			end
+			if to_return.length == 1
+				to_return = " " + to_return 
+			end
 			return to_return
 		end
 			

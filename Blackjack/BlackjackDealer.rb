@@ -27,7 +27,10 @@ class BlackjackDealer < BlackjackPlayer
 
 	def to_message
 		to_return = []
-		to_return.push(Message.new("Dealer - "))
+		if @game.curr_player == self
+			to_return.push(Message.new(">"))
+		end
+		to_return.push(Message.new("Dealer\t\t"))
 		to_return.push(*curr_hand.to_message)
 		return to_return
 	end

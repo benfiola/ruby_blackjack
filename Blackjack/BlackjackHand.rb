@@ -26,7 +26,7 @@ class BlackjackHand < Generic::Hand
 	end
 
 	def is_blackjack
-		return get_value == 21
+		return get_value == 21 && @cards.length == 2
 	end
 
 	def is_winner(dealer_value)
@@ -46,6 +46,40 @@ class BlackjackHand < Generic::Hand
 		@has_doubled = true
 	end
 
+	def get_blackjack_winnings
+		return ((@bet) + (@bet * 1.2)).to_i
+	end
+
+	def get_regular_winnings
+		return @bet + @bet
+	end
+
+	def get_action_message(player_money)
+		message_arr = []
+		if(can_hit)
+			message_arr.push(Message.new("["))
+			message_arr.push(Message.new("h", "red"))
+			message_arr.push(Message.new("]it, "))
+		end
+		if(can_double && player_money >= @bet)
+			message_arr.push(Message.new("["))
+			message_arr.push(Message.new("d", "red"))
+			message_arr.push(Message.new("]ouble down, "))
+		end
+		if(can_split && player_money >= @bet)
+			message_arr.push(Message.new("s["))
+			message_arr.push(Message.new("p", "red"))
+			message_arr.push(Message.new("]lit, "))
+		end
+		message_arr.push(Message.new("["))
+		message_arr.push(Message.new("s", "red"))
+		message_arr.push(Message.new("]tay or "))
+		message_arr.push(Message.new("["))
+		message_arr.push(Message.new("q", "red"))
+		message_arr.push(Message.new("]uit : ")) 
+		return message_arr
+	end
+
 	# finally, this method helps us determine the blackjack value of the current hand
 	def get_value
 		aces_in_hand = 0
@@ -61,5 +95,18 @@ class BlackjackHand < Generic::Hand
 			aces_in_hand = aces_in_hand - 1
 		end
 		return value
+	end
+
+	def to_message
+		message_arr = super
+		if @winnings != nil
+			message_arr.push(Message.new("\t\t"))
+			if @winnings == @bet
+				message_arr.push(Message.new("+$#{@winnings}", "yellow"))
+			else
+				message_arr.push(Message.new("+$#{@winnings}", "green"))
+			end
+		end
+		return message_arr
 	end
 end

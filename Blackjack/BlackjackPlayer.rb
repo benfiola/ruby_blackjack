@@ -8,14 +8,25 @@ class BlackjackPlayer < Generic::Player
 		@game = game
 	end
 
+	def get_action_message
+		message_arr = []
+		message_arr.push(Message.new("Player #{@number} can choose to "))
+		message_arr.push(*@curr_hand.get_action_message(@money))
+		return message_arr
+	end
+
 	def take_action(*args)
 		action = args[0]
-		if(action == "h")
+		if action == "q"
+			exit(0)
+		elsif action == "s"
+			return false
+		elsif(action == "h")
 			if @curr_hand.can_hit
 				receive_card @game.request_card
 			end
 		elsif(action == "p")
-			if @curr_hand.can_split
+			if @curr_hand.can_split && @curr_hand.bet <= money
 				# remove a card from the current hand and request a new card from the game
 				removed = @curr_hand.remove_card(@curr_hand.cards.last)
 				receive_card @game.request_card
@@ -33,7 +44,7 @@ class BlackjackPlayer < Generic::Player
 				place_bet(@curr_hand.bet, new_hand)
 			end
 		elsif(action == "d")
-			if @curr_hand.can_double
+			if @curr_hand.can_double && @curr_hand.bet <= @money
 				# double our bet and receive the next card
 				place_bet(@curr_hand.bet, @curr_hand)
 				receive_card @game.request_card
@@ -43,5 +54,7 @@ class BlackjackPlayer < Generic::Player
 				@curr_hand.double
 			end
 		end
+
+		return true
 	end
 end

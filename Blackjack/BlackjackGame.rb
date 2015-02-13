@@ -3,14 +3,22 @@ require "./Blackjack/BlackjackPlayer.rb"
 require "./Blackjack/BlackjackDeck.rb"
 require "curses"
 
+class String
+	def is_number?
+		begin
+			Float(self)
+			return true
+		rescue
+			return false
+		end
+	end
+end
+
 class BlackjackGame
 	attr_reader :players, :curr_player, :dealer, :deck
 	def initialize(display)
 		@display = display
-		num_players = get_num_players("").to_i
-		while num_players <= 0
-			num_players = get_num_players("Please enter a positive integer.\n").to_i
-		end
+		num_players = get_num_players
 		@players = []
 		for i in 0...num_players
 			@players.push(BlackjackPlayer.new(i+1, 1000, self))
@@ -19,10 +27,19 @@ class BlackjackGame
 	end
 
 	def go
-		while(true)
+		while @players.length > 0
 			reset_round
 			do_round
 		end
+		game_over
+	end
+
+	def game_over
+		message_arr = []
+		message_arr.push(Message.new("Game over!  Thanks for playing!", "green"))
+		@display.send_data_to_game_window(message_arr)
+		@display.press_key_to_continue
+		exit(0)
 	end
 
 	def reset_round
@@ -40,11 +57,15 @@ class BlackjackGame
 	end
 
 	def do_round
+		to_remove = []
 		# first, all players need to make a bet
 		for player in @players
 			@curr_player = player
-			player.place_bet(get_bet(""), player.curr_hand)
+			player.place_bet(get_bet, player.curr_hand)
+			@display.send_data_to_game_window(self.to_message)
 		end
+
+		@display.send_data_to_game_window(self.to_message)
 
 		# now, the dealer needs a card (just one) that's visible to all players
 		@dealer.curr_hand.add_card(@deck.grab_card)
@@ -56,13 +77,13 @@ class BlackjackGame
 		end
 
 		# here, each player will take a turn handling their hands - this means
-		# a nested loop in the event that someone does split (which could theoretically happen)
+		# a nested loop in the event that someone splits (which could theoretically happen)
 		# multiple times.
 		for player in @players
 			@curr_player = player
 			for hand in @curr_player.hands
 				@curr_player.set_curr_hand hand
-				while(get_action(player, ""))
+				while(handle_action(player))
 				end
 			end
 		end
@@ -75,70 +96,87 @@ class BlackjackGame
 			for hand in player.hands
 				if hand.is_winner(@dealer.curr_hand.get_value)
 					if hand.is_blackjack
-						player.receive_money(((hand.bet) + (hand.bet * 1.2)).to_i)
+						hand.set_winnings hand.get_blackjack_winnings
+						player.receive_money(hand.get_blackjack_winnings)
 					else
-						player.receive_money(hand.bet + hand.bet)
+						hand.set_winnings hand.get_regular_winnings
+						player.receive_money(hand.get_regular_winnings)
 					end
 				elsif hand.is_push(@dealer.curr_hand.get_value)
+					hand.set_winnings hand.bet
 					player.receive_money(hand.bet)
 				end
 			end
 		end
+
+		@curr_player = nil
 		@display.send_data_to_game_window(self.to_message)
 		message_arr = []
 		message_arr.push(Message.new("The round has ended."))
 		@display.press_key_to_continue(message_arr)
+
+		# sometimes, when you gamble, you lose all your money.  
+		# rather than have these party-poopers suck up all the fun,
+		# we'll delete them from our 'table' here.
+		to_remove = []
+		for player in @players
+			if player.money <= 0
+				to_remove.push player
+			end
+		end
+
+		for player_to_remove in to_remove
+			@players.delete player_to_remove
+		end
 	end
 
 
-	def get_bet(more_text)
+	def get_bet
 		@display.send_data_to_game_window(self.to_message)
 		message_arr = []
 		message_arr.push(Message.new("Player #{@curr_player.number}'s bet : "))
-		@display.send_data_to_input_window(message_arr)
-		bet = @display.fetch_data_from_input_window
+		bet = prompt_user_for_input(message_arr)
+		while(!bet.is_number? || bet.to_i <= 0 || bet.to_i > @curr_player.money)
+			bet = prompt_user_for_input(message_arr)
+		end
 		return bet.to_i
 	end
 
-	def get_action(player, more_text)
+	def handle_action(player)
 		@display.send_data_to_game_window(self.to_message)
-		action_string = "Player #{@curr_player.number} can choose to "
-		if(@curr_player.curr_hand.can_hit)
-			action_string += "[h]it, "
-		end
-		if(@curr_player.curr_hand.can_double)
-			action_string += "[d]ouble down, "
-		end
-		if(@curr_player.curr_hand.can_split)
-			action_string += "s[p]lit, "
-		end
-		action_string += "[s]tay or [q]uit : \n"
-		message_arr = []
-		message_arr.push(Message.new(action_string))
-		@display.send_data_to_input_window(message_arr)
-		action = @display.fetch_data_from_input_window
-		if(action == "q")
-			exit(0)
-		elsif(action == "s")
-			return false
-		else
-			player.take_action(action)
-			return true
+		action = prompt_user_for_input(player.get_action_message)
+		while(player.take_action(action))
+			@display.send_data_to_game_window(self.to_message)
+			action = prompt_user_for_input(player.get_action_message)
 		end
 	end
 
 
-	def get_num_players(more_text)
+	def get_num_players
 		message_arr = []
-		message_arr.push(Message.new("#{more_text}How many players?\n"))
-		@display.send_data_to_input_window(message_arr)
+		message_arr.push(Message.new("How many players?\n"))
+		num_players = prompt_user_for_input(message_arr)
+		while(!num_players.is_number? || num_players.to_i <= 0)
+			num_players = prompt_user_for_input(message_arr)
+		end
+		return num_players.to_i
+	end
+
+	def prompt_user_for_input(message)
+		@display.send_data_to_input_window(message)
 		return @display.fetch_data_from_input_window
 	end
 
+
+	# since all players have access to the 'game' object, when they 
+	# want a card, they request it from the game itself (since the game
+	# holds the deck)
 	def request_card
 		@deck.grab_card
 	end
 
+	# for debugging purposes, it doesn't hurt to be able to also
+	# serialize the game (using ruby's string interpolation)
 	def to_s
 		str = "\r#{dealer}\n"
 		for player in @players
@@ -147,8 +185,11 @@ class BlackjackGame
 		return str
 	end
 
+	# this method converts the game into a displayable 'message'
+	# that's passed to our display
 	def to_message
 		to_return = []
+		to_return.push(Message.new("Player\t\t Bet\tHand\t\t\tWinnings\n"))
 		to_return.push(*dealer.to_message)
 		to_return.push(Message.new("\n"))
 		for player in @players

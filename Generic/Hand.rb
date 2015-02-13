@@ -1,11 +1,20 @@
 # Simple class that defines a collection of cards currently
 # held by a player
+
+# generally, it would make sense that a hand contains a collection
+# of cards.  it would also make sense to have a hand hold the bet that's
+# placed on it.  for display purposes, i thought it'd also be useful
+# to store whatever winnings this hand achieved.
 module Generic
 	class Hand
-		attr_reader :cards, :bet
+		attr_reader :cards, :bet, :winnings
 		def initialize
 			@cards = []
 			@bet = 0
+		end
+
+		def set_winnings(winnings)
+			@winnings = winnings
 		end
 
 		def add_card(card)
@@ -44,6 +53,12 @@ module Generic
 
 		def to_message
 			to_return = []
+			bet_str = ""
+			if @bet > 0
+				bet_str = "-$#{@bet}"
+			end
+			to_return.push(Message.new("#{bet_str}", "red"))
+			to_return.push(Message.new("\t"))
 			for card in @cards
 				to_return.push(*card.to_message)
 			end
