@@ -110,7 +110,7 @@ class BlackjackHand < Generic::Hand
 	def to_message
 		message_arr = super
 		if @cards.length != 0
-			message_arr.push(Message.new(" Value : #{get_value} ", "magenta"))
+			message_arr.push(Message.new(" #{get_value} ", "magenta"))
 		end
 		if @winnings != nil
 			message_arr.push(Message.new("  "))

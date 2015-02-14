@@ -52,7 +52,8 @@ class BlackjackGame
 	# can't have a complete game without a game over screen.
 	def game_over
 		message_arr = []
-		message_arr.push(Message.new("Game over!  Thanks for playing!", "green"))
+		message_arr.push(Message.new("Everyone ran out of money.  :(\n", "red"))
+		message_arr.push(Message.new("Thanks for playing!", "green"))
 		@display.send_data_to_game_window(message_arr)
 		@display.press_key_to_continue
 		exit(0)
