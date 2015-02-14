@@ -45,7 +45,7 @@ ruby Main.rb
 You should be good to go.  If, for whatever reason, you REALLY want to exit the program, you can always press Control + C.
 
 ##Known Issues
-Unfortunately, scrolling in a Curses window is not trivial.  I also don't think there's an easy way for Curses windows to be responsive with regards to Terminal resizes.  You need to make sure that your terminal window has enough vertical lines to support <num_players> + 4 lines before running the application - at least until I figure out how to solve this issue.  
+Unfortunately, scrolling in a Curses window is not trivial.  I also don't think there's an easy way for Curses windows to be responsive with regards to Terminal resizes.  You need to make sure that your terminal window has enough vertical lines to support <num_players> + 4 rows and about 90-100 columns to for horizontal width before running the application - at least until I figure out how to solve this issue.  For general use cases, 24 rows and 90 columns has worked for me.
 
 In a similar vein, I try to use tabs to keep the 'game window' tidy.  This usually works as intended, but sometimes, we get weird tab behavior.  I would prefer to use c-style printf formatting, but I don't believe this is supported by Curses.
 
