@@ -20,8 +20,6 @@ class Display
 		start_color
 		use_default_colors
 		Curses.TABSIZE=12
-
-		# 40 is green - for some reason, using COLOR_GREEN looks a bit like yellow
 		init_pair(COLOR_GREEN, COLOR_GREEN, -1)
 		init_pair(COLOR_RED, COLOR_RED, -1)
 		init_pair(COLOR_WHITE, COLOR_WHITE, -1)   
@@ -31,24 +29,30 @@ class Display
 		@main_window.refresh
 	end
 
+	# sends data to the main window of the application (showing all players, hands, etc.)
 	def send_data_to_game_window(data)
 		@game_window.clear
 		flush_data(data, @game_window)
 		@game_window.refresh
 	end
 
+	# sends data to the window at the bottom of the application (prompting user for input)
 	def send_data_to_input_window(data)
 		@input_window.clear
 		flush_data(data, @input_window)
 		@input_window.refresh
 	end
 
+	# it's good practice to close all open windows once the application
+	# terminates.
 	def close
 		@input_window.close
 		@game_window.close
 		@main_window.close
 	end
 
+	# send data to curses window, making sure to set the correct
+	# color attributes before doing so.
 	def flush_data(data, window)
 		for message in data
 			case message.color 
@@ -71,6 +75,10 @@ class Display
 		end
 	end
 
+	# This method is a particular case - say we want to print something
+	# to the input_window and prompt the user to 'press any key' to continue.
+	# We might not necessarily need to say anything besides 'Press any key to continue'
+	# so we make arguments optional.  If there is anything to print, it will be in args[0].
 	def press_key_to_continue(*args)
 		@input_window.clear
 		if(args.length > 0) 
@@ -80,6 +88,7 @@ class Display
 		return @input_window.getch
 	end
 
+	# Gets a string input from the window (blocks until 'enter' is pressed)
 	def fetch_data_from_input_window
 		return @input_window.getstr
 	end 

@@ -1,8 +1,12 @@
 require_relative "./BlackjackCard.rb"
 require_relative "../Generic/Hand.rb"
 require_relative "../Display/Message"
-require "pry"
 
+# This class contains the blackjack specific methods
+# we might want to call on a hand of cards.  Since a Blackjack hand tends
+# to define what a player can/can't do bet-wise as well decide the outcome 
+# for the player (in terms of the game round), you'll see a lot of logic supporting
+# these things in this class.
 class BlackjackHand < Generic::Hand	
 	def initialize
 		super

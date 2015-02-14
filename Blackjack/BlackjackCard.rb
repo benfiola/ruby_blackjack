@@ -1,5 +1,11 @@
 require_relative '../Generic/Card.rb'
 
+# This class just implements the blackjack-specific things we 
+# might want out of these series of classes.  
+# (I decided to make an empty BlackjackSuit class just so that there's an analogue
+# between every generic class and Blackjack-specific class)
+
+# Look at '../Generic/Card.rb' for more of the underlying implementation.
 class BlackjackCard < Generic::Card
 	def initialize(suit, rank)
 		@suit = BlackjackSuit.new(suit)
