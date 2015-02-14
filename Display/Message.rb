@@ -1,3 +1,8 @@
+# i needed the ability to not only send data (strings) to curses
+# but also choose what color these strings would be when they were
+# printed to the screen.
+
+# a message really just wraps text data with color.  
 class Message
 	attr_reader :data, :color
 

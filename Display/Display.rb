@@ -3,6 +3,11 @@ require_relative "./Message.rb"
 
 include Curses
 
+# For this class, the main_window represents the entire terminal window.
+# The game_window is the section of the main_window that communicates data 
+# about the game in its current state.
+# The input_window is the bottom section of the main_window that prompts the
+# user for input.
 class Display
 	attr_reader :game_window, :input_window
 
@@ -15,7 +20,7 @@ class Display
 		start_color
 		use_default_colors
 		Curses.TABSIZE=12
-		
+
 		# 40 is green - for some reason, using COLOR_GREEN looks a bit like yellow
 		init_pair(COLOR_GREEN, COLOR_GREEN, -1)
 		init_pair(COLOR_RED, COLOR_RED, -1)
