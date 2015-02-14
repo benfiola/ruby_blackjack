@@ -11,6 +11,8 @@ class BlackjackPlayer < Generic::Player
 		@game = game
 	end
 
+	# this method generates the player-centric data for the action string that's
+	# displayed when asking for input.
 	def get_action_message
 		message_arr = []
 		message_arr.push(Message.new("Player #{@number} can choose to "))
@@ -18,18 +20,19 @@ class BlackjackPlayer < Generic::Player
 		return message_arr
 	end
 
+	# will return true only if this player is done taking action on this current hand.
 	def take_action(*args)
 		action = args[0]
 		if action == "q"
 			exit(0)
 		elsif action == "s"
-			return false
+			return true
 		elsif(action == "h")
 			if @curr_hand.can_hit
 				receive_card @game.request_card
 			end
 		elsif(action == "p")
-			if @curr_hand.can_split && @curr_hand.bet <= money
+			if @curr_hand.can_split(@money)
 				# remove a card from the current hand and request a new card from the game
 				removed = @curr_hand.remove_card(@curr_hand.cards.last)
 				receive_card @game.request_card
@@ -47,7 +50,7 @@ class BlackjackPlayer < Generic::Player
 				place_bet(@curr_hand.bet, new_hand)
 			end
 		elsif(action == "d")
-			if @curr_hand.can_double && @curr_hand.bet <= @money
+			if @curr_hand.can_double(@money)
 				# double our bet and receive the next card
 				place_bet(@curr_hand.bet, @curr_hand)
 				receive_card @game.request_card
@@ -58,6 +61,6 @@ class BlackjackPlayer < Generic::Player
 			end
 		end
 
-		return true
+		return false
 	end
 end

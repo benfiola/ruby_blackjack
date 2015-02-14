@@ -54,6 +54,8 @@ module Generic
 			to_return = []
 			if @game.curr_player == self
 				to_return.push(Message.new(">"))
+			else
+				to_return.push(Message.new(" "))
 			end
 			to_return.push(Message.new("Player #{@number} ("))
 			to_return.push(Message.new("$#{@money}", "green"))

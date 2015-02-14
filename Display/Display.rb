@@ -14,13 +14,15 @@ class Display
 		@input_window = @main_window.subwin(3, 0, @main_window.maxy-3, 0)
 		start_color
 		use_default_colors
-		Curses.TABSIZE=10
+		Curses.TABSIZE=12
+		
 		# 40 is green - for some reason, using COLOR_GREEN looks a bit like yellow
 		init_pair(COLOR_GREEN, COLOR_GREEN, -1)
 		init_pair(COLOR_RED, COLOR_RED, -1)
 		init_pair(COLOR_WHITE, COLOR_WHITE, -1)   
 		init_pair(COLOR_BLUE, COLOR_BLUE, -1)
 		init_pair(COLOR_YELLOW, COLOR_YELLOW, -1)   
+		init_pair(COLOR_MAGENTA, COLOR_MAGENTA, -1)
 		@main_window.refresh
 	end
 
@@ -55,6 +57,8 @@ class Display
 					attribute = (color_pair(COLOR_YELLOW)|A_NORMAL)
 				when "blue"
 					attribute = (color_pair(COLOR_BLUE)|A_NORMAL)
+				when "magenta"
+					attribute = (color_pair(COLOR_MAGENTA)|A_NORMAL)
 			end
 			window.attron(attribute)
 			window.addstr(message.data)

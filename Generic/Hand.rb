@@ -55,7 +55,7 @@ module Generic
 			to_return = []
 			bet_str = ""
 			if @bet > 0
-				bet_str = "-$#{@bet}"
+				bet_str = "Bet $#{@bet}"
 			end
 			to_return.push(Message.new("#{bet_str}", "red"))
 			to_return.push(Message.new("\t"))

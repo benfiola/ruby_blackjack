@@ -1,6 +1,11 @@
 require_relative "./BlackjackPlayer.rb"
 require_relative "../Display/Message.rb"
 
+# My implementation initially featured a dealer that functioned
+# similar to what you'd expect in a casino.  It made more sense
+# semantically, however, to have the game object handle the cards, 
+# and to have the dealer simply function as a computer-controller player
+# who doesn't have money or place bets.
 class BlackjackDealer < BlackjackPlayer
 
 	def initialize(game)
@@ -22,13 +27,15 @@ class BlackjackDealer < BlackjackPlayer
 	end
 
 	def to_s
-		"Dealer - #{@curr_hand}"
+		" Dealer - #{@curr_hand}"
 	end
 
 	def to_message
 		to_return = []
 		if @game.curr_player == self
 			to_return.push(Message.new(">"))
+		else
+			to_return.push(Message.new(" "))
 		end
 		to_return.push(Message.new("Dealer\t\t"))
 		to_return.push(*curr_hand.to_message)

@@ -1,6 +1,7 @@
 require_relative "./BlackjackCard.rb"
 require_relative "../Generic/Hand.rb"
 require_relative "../Display/Message"
+require "pry"
 
 class BlackjackHand < Generic::Hand	
 	def initialize
@@ -8,12 +9,12 @@ class BlackjackHand < Generic::Hand
 		@has_doubled = false
 	end
 	# given the current hand, let's define what we can do.
-	def can_split
-		return @cards.length == 2 && @cards.first.rank.value == @cards.last.rank.value && !is_blackjack
+	def can_split(player_money)
+		return @cards.length == 2 && @cards.first.rank.value == @cards.last.rank.value && !is_blackjack && @bet <= player_money
 	end
 
-	def can_double
-		return !@has_doubled && @cards.length == 2 && !is_blackjack
+	def can_double(player_money)
+		return !@has_doubled && @cards.length == 2 && !is_blackjack && @bet <= player_money
 	end
 
 	def can_hit
@@ -47,6 +48,8 @@ class BlackjackHand < Generic::Hand
 		@has_doubled = true
 	end
 
+	# since the hand has the bet amount, we should do the calculations for how much
+	# is won in the hand class as well.
 	def get_blackjack_winnings
 		return ((@bet) + (@bet * 1.2)).to_i
 	end
@@ -55,6 +58,11 @@ class BlackjackHand < Generic::Hand
 		return @bet + @bet
 	end
 
+	# since we need to know what we can do with the hand, this method will try to 
+	# answer that question and provide a printable message to the screen.  only problem
+	# is that we need to know some extra information to figure out whether we can double or split
+	# (the player's total money - can't double/split on something if your wager is greater than
+	# your current balance).  
 	def get_action_message(player_money)
 		message_arr = []
 		if(can_hit)
@@ -62,17 +70,17 @@ class BlackjackHand < Generic::Hand
 			message_arr.push(Message.new("h", "red"))
 			message_arr.push(Message.new("]it, "))
 		end
-		if(can_double && player_money >= @bet)
+		if(can_double(player_money))
 			message_arr.push(Message.new("["))
 			message_arr.push(Message.new("d", "red"))
 			message_arr.push(Message.new("]ouble down, "))
 		end
-		if(can_split && player_money >= @bet)
+		if(can_split(player_money))
 			message_arr.push(Message.new("s["))
 			message_arr.push(Message.new("p", "red"))
-			message_arr.push(Message.new("]lit, "))
+			message_arr.push(Message.new("]lit, or"))
 		end
-		message_arr.push(Message.new("or ["))
+		message_arr.push(Message.new("["))
 		message_arr.push(Message.new("s", "red"))
 		message_arr.push(Message.new("]tay :"))
 		return message_arr
@@ -97,12 +105,30 @@ class BlackjackHand < Generic::Hand
 
 	def to_message
 		message_arr = super
+		if @cards.length != 0
+			message_arr.push(Message.new(" Value : #{get_value} ", "magenta"))
+		end
 		if @winnings != nil
-			message_arr.push(Message.new("\t\t"))
+			message_arr.push(Message.new("  "))
 			if @winnings == @bet
-				message_arr.push(Message.new("+$#{@winnings}", "yellow"))
+				message_arr.push(Message.new("PUSH +$0", "yellow"))
+			elsif @winnings == 0
+				if is_bust
+					message_arr.push(Message.new("BUST -$#{@bet}", "red"))
+				else
+					message_arr.push(Message.new("LOST -$#{@bet}", "red"))
+				end
 			else
-				message_arr.push(Message.new("+$#{@winnings}", "green"))
+				# say we bet 30 bucks on a hand.  
+				# we have a balance of 0 dollars.
+				# then we win the hand.
+				# we get 60 dollars back.
+				# technically, we only won 30, as the other 30 came from our bet.
+				# in our implementation, we win  60 dollars, but when we display
+				# to our user, we only want to display the amount excluding our
+				# initial bet.
+				to_print = @winnings - @bet
+				message_arr.push(Message.new("WON +$#{to_print}", "green"))
 			end
 		end
 		return message_arr
